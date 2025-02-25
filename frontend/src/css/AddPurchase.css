@@ -1,0 +1,60 @@
+.home-container {
+  padding-top: 60px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.add-purchase-wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+
+.addNewPurchase {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    border-radius: 10px; 
+    padding: 20px; 
+    cursor: pointer; 
+    border: none; 
+    justify-content: center;
+    text-align: center; 
+    width: auto;
+    height: auto;
+}
+  
+.plus-icon {
+    font-size: 40px; 
+    color: #000; 
+    margin-bottom: 10px;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #DDE7C7;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+  
+.add-purchase-text {
+    font-size: 16px;
+    color: #000;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: bold;
+}
+  
+.add-new-purchase:hover {
+    background-color: #e0e0e0;
+}

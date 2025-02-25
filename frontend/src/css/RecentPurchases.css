@@ -1,0 +1,43 @@
+.recent-purchases-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recent-purchases-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recent-purchases-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.recent-purchases-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 1fr;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.recent-purchases-row:last-child {
+    border-bottom: none;
+}
+
+.empty-message {
+    text-align: center;
+    color: #000000;
+    font-size: 1rem;
+    margin-top: 10px;
+}
