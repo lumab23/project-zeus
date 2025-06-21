@@ -11,7 +11,9 @@ const Results = () => {
 
   const fetchDataByType = async () => {
     try {
+      console.log("Fazendo requisição para buscar dados por tipo...");
       const response = await axios.get("http://localhost:3001/api/purchases/grouped-by-type");
+      console.log("Dados recebidos:", response.data);
       setExpenses(response.data);
     } catch (err) {
       console.error("Erro ao buscar dados por tipo:", err);
@@ -20,7 +22,9 @@ const Results = () => {
 
   const fetchMonthlyData = async () => {
     try {
+      console.log("Fazendo requisição para buscar dados mensais...");
       const response = await axios.get("http://localhost:3001/api/purchases/monthly");
+      console.log("Dados mensais recebidos:", response.data);
       setMonthlyData(response.data);
     } catch (err) {
       console.error("Erro ao buscar dados mensais:", err);

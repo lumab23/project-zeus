@@ -38,6 +38,17 @@ const Charts = ({ type, data }) => {
   const chartWidth = 600;
   const chartHeight = 350;
 
+  console.log("Charts component - type:", type, "data:", data);
+
+  // Verificar se os dados existem e são válidos
+  if (!data || data.length === 0) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <p className="text-slate-400">Nenhum dado disponível para exibir no gráfico.</p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         {type === "pie" && (

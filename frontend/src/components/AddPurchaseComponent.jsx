@@ -26,10 +26,10 @@ const AddPurchaseComponent = () => {
 
             {isFormVisible && (
                 <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
-                    <div className="bg-white p-8 rounded-xl shadow-2xl relative w-full max-w-lg">
+                    <div className="bg-slate-800/80 border border-slate-700 p-8 rounded-xl shadow-2xl relative w-full max-w-lg">
                         <button 
                             onClick={toggleFormVisibility} 
-                            className="absolute top-4 right-4 text-slate-500 hover:text-slate-800 transition-colors"
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
                         >
                             <FaTimes size={24} />
                         </button>

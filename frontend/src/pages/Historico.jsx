@@ -5,7 +5,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaEdit, FaTrash, FaTimes, FaFilter, FaCalendarAlt, FaCalendarDay, FaUndo } from "react-icons/fa";
 
-// Custom dark theme for DatePicker
 const DarkDatePickerInput = React.forwardRef(({ value, onClick }, ref) => (
   <div className="relative">
     <FaCalendarDay className="absolute top-1/2 left-3 -translate-y-1/2 text-slate-400" />
@@ -101,11 +100,26 @@ const Historico = () => {
     if (window.confirm("Tem certeza que deseja deletar esta compra?")) {
       try {
         await axios.delete(`http://localhost:3001/api/purchases/${purchaseId}`);
-        fetchAllPurchases();
+        setPurchases(prevPurchases => {
+          const newPurchases = prevPurchases.filter(purchase => purchase._id !== purchaseId);
+          if (newPurchases.length === 0) {
+            setVisibleCount(20);
+          }
+          return newPurchases;
+        });
       } catch (err) {
         console.error("Erro ao deletar compra:", err);
+        fetchAllPurchases();
       }
     }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setMessage("");
+    setEditingPurchase(null);
+    setPriceError("");
+    setQuantityError("");
   };
 
   const handleEditPurchase = (purchase) => {
@@ -118,6 +132,10 @@ const Historico = () => {
       store: purchase.store || "",
       description: purchase.description || "",
     });
+    // Limpa mensagens de erro anteriores
+    setMessage("");
+    setPriceError("");
+    setQuantityError("");
     setModalVisible(true);
   };
 
@@ -130,7 +148,49 @@ const Historico = () => {
 
   const submitEditForm = async (e) => {
     e.preventDefault();
-    // Validations and submission logic...
+    
+    // Validações
+    if (!formData.product || !formData.price || !formData.quantity) {
+      setMessage("Preencha todos os campos obrigatórios!");
+      return;
+    }
+
+    if (priceError || quantityError) {
+      setMessage("Corrija os erros nos campos antes de salvar.");
+      return;
+    }
+
+    try {
+      const updatedData = {
+        product: formData.product,
+        price: parseFloat(formData.price),
+        quantity: parseInt(formData.quantity),
+        type: formData.type,
+        store: formData.store,
+        description: formData.description
+      };
+
+      const response = await axios.put(`http://localhost:3001/api/purchases/${editingPurchase._id}`, updatedData);
+      
+      if (response.status === 200) {
+        setMessage("Compra atualizada com sucesso!");
+        
+        // Atualiza o estado local imediatamente
+        setPurchases(prevPurchases => 
+          prevPurchases.map(purchase => 
+            purchase._id === editingPurchase._id ? response.data : purchase
+          )
+        );
+        
+        // fecha a modal após um breve delay
+        setTimeout(() => {
+          closeModal();
+        }, 1500);
+      }
+    } catch (err) {
+      console.error("Erro ao atualizar compra:", err);
+      setMessage("Erro ao atualizar a compra. Tente novamente.");
+    }
   };
 
   const filteredPurchases = purchases.filter((purchase) => {
@@ -272,7 +332,7 @@ const Historico = () => {
       {modalVisible && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-slate-800/80 border border-slate-700 p-8 rounded-xl shadow-2xl relative w-full max-w-lg">
-            <button onClick={() => setModalVisible(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"><FaTimes size={24} /></button>
+            <button onClick={closeModal} className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"><FaTimes size={24} /></button>
             <h2 className="text-3xl font-bold text-center text-white mb-6">Editar Compra</h2>
             <form onSubmit={submitEditForm} className="space-y-4">
                 <div>
