@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../css/RecentPurchases.css";
 
 const RecentPurchases = () => {
   const [purchases, setPurchases] = useState([]);
@@ -19,36 +18,43 @@ const RecentPurchases = () => {
   }, []);
 
   return (
-    <div className="recent-purchases-container">
-      <h3>Últimas Compras</h3>
-      <div className="recent-purchases-table">
-        <div className="recent-purchases-header">
-          <span>Produto</span>
-          <span>Preço</span>
-          <span>Quant.</span>
-          <span>Loja</span>
-          <span>Data</span>
-        </div>
-
-        {purchases.length === 0 ? (
-          <p className="empty-message">Nenhuma compra na lista.</p>
-        ) : (
-          purchases.map((purchase, index) => (
-            <div key={index} className="recent-purchases-row">
-              <span>{purchase.product}</span>
-              <span>R$ {purchase.price.toFixed(2)}</span>
-              <span>{purchase.quantity} un.</span>
-              <span>{purchase.store}</span>
-              <span>
-                {new Date(purchase.date).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}
-              </span>
-            </div>
-          ))
-        )}
+    <div className="bg-slate-800/50 p-6 rounded-xl shadow-lg border border-slate-700 backdrop-blur-sm transition-all duration-300 hover:border-indigo-500 hover:bg-slate-800">
+      <h2 className="text-2xl font-bold text-white mb-4">Últimas Compras</h2>
+      <div className="overflow-x-auto">
+        <table className="min-w-full">
+          <thead className="bg-slate-900/50">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Produto</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Preço</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Quantidade</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Loja</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Data</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-700">
+            {purchases.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-6 py-8 text-center text-slate-400">Nenhuma compra na lista.</td>
+              </tr>
+            ) : (
+              purchases.map((purchase, index) => (
+                <tr key={index} className="hover:bg-slate-700/50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{purchase.product}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">R$ {purchase.price.toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{purchase.quantity} un.</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{purchase.store}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                    {new Date(purchase.date).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -79,86 +79,86 @@ const PurchaseForm = () => {
       }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <h2 className="text-3xl font-bold text-center text-slate-900 mb-6">Registrar Compra</h2>
+            
             <div>
-                <label>Produto</label>
+                <label className="block text-sm font-medium text-slate-700">Produto</label>
                 <input 
                     type="text"
                     value={product}
                     onChange={(e) => setProduct(e.target.value)}
                     required
+                    className="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                  />
             </div>
 
-            <div>
-                <label>Valor</label>
-                <input 
-                    type="text"
-                    value={price}   
-                    onChange={handlePriceSubmition}
-                    required
-                 />
-                 {priceError && (
-                    <p style={{ color: "red", margin: "5px 0 0 0", fontSize: "0.8rem" }}>
-                        {priceError}
-                    </p>
-                )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block text-sm font-medium text-slate-700">Valor</label>
+                    <input 
+                        type="text"
+                        value={price}   
+                        onChange={handlePriceSubmition}
+                        required
+                        className="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    {priceError && <p className="mt-2 text-sm text-red-600">{priceError}</p>}
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-slate-700">Quantidade</label>
+                    <input
+                        type="text"
+                        value={quantity}
+                        onChange={handleQuantitySubmition}
+                        required
+                        className="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    {quantityError && <p className="mt-2 text-sm text-red-600">{quantityError}</p>}
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label className="block text-sm font-medium text-slate-700">Loja</label>
+                    <input 
+                        type="text"
+                        value={store}
+                        onChange={(e) => setStore(e.target.value)}
+                        className="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-slate-700">Tipo</label>
+                    <select value={type} onChange={(e) => setType(e.target.value)} className="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="Alimentação">Alimentação</option>
+                        <option value="Saúde">Saúde</option>
+                        <option value="Acessórios">Acessórios</option>
+                        <option value="Higiene">Higiene</option>
+                        <option value="Brinquedos">Brinquedos</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
             </div>
 
             <div>
-                <label>Quantidade</label>
-                <input
-                    type="text"
-                    value={quantity}
-                    onChange={handleQuantitySubmition}
-                    required
-                />
-                { quantityError && (
-                    <p style={{ color: "red", margin: "5px 0 0 0", fontSize: "0.8rem" }}>
-                        {quantityError}
-                    </p>
-                )}
-            </div>
-
-            <div>
-                <label>Loja</label>
-                <input 
-                    type="text"
-                    value={store}
-                    onChange={(e) => setStore(e.target.value)}
-                 />
-            </div>
-
-            <div>
-                <label>Tipo</label>
-                <select value={type} onChange={(e) => setType(e.target.value)}>
-                    <option value="Alimentação">Alimentação</option>
-                    <option value="Saúde">Saúde</option>
-                    <option value="Acessórios">Acessórios</option>
-                    <option value="Higiene">Higiene</option>
-                    <option value="Brinquedos">Brinquedos</option>
-                    <option value="Outros">Outros</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Descrição (opcional)</label>
+                <label className="block text-sm font-medium text-slate-700">Descrição (opcional)</label>
                 <textarea 
                     value={description}
                     onChange={handleDescriptionChange}
                     maxLength={200}
+                    rows="3"
+                    className="mt-1 block w-full px-4 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
             </div>
 
+            <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-lg text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300">Registrar</button>
 
-            <button type="submit">Registrar</button>
-
-            {message && <p>{message}</p>}
-
+            {message && <p className={`mt-4 text-sm text-center font-semibold ${message.includes('sucesso') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
         </form>
     )
-
 };
-
 
 export default PurchaseForm;
