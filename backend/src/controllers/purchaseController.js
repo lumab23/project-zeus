@@ -27,8 +27,10 @@ const addPurchase = async (req, res) => {
       throw new Error(`A quantidade deve ser um número inteiro e positivo. Você forneceu: ${quantity}`);
     }
 
+    const totalPrice = price * quantity;
+
     // instância de compra
-    const purchase = new Purchase({ product, price, quantity, type, month, store, description, date });
+    const purchase = new Purchase({ product, price, quantity, totalPrice, type, month, store, description, date });
     await purchase.save();
     
     res.status(201).json({
@@ -67,43 +69,43 @@ const updatePurchase = async (req, res) => {
   const { id } = req.params; // extrai o id dos param. da URL 
   const { product, quantity, price, type, store, description } = req.body; // extrai dados do corpo da req.
   
-  const purchase = await Purchase.findById(id); // buscando a compra pelo id
-  if (!purchase) {
-    return res.status(404).json({ error: "Compra não encontrada" });
-  }
-
   try {
+    const existingPurchase = await Purchase.findById(id); // buscando a compra pelo id
+    if (!existingPurchase) {
+      return res.status(404).json({ error: "Compra não encontrada" });
+    }
+
     // validações
-    if (price == null || quantity == null) {
-      throw new Error("A quantidade/preço fornecido está vazio.")
+    if (price !== undefined && (isNaN(price) || price <= 0)) {
+      throw new Error("Forneça um preço válido e positivo!");
     }
     
-    if (price !== undefined && isNaN(price)) {
-      throw new Error("Forneça um preço válido!");
+    if (quantity !== undefined && (!Number.isInteger(quantity) || quantity <= 0)) {
+      throw new Error("Forneça uma quantidade válida, inteira e positiva!");
     }
     
-    if (quantity !== undefined && isNaN(quantity)) {
-      throw new Error("Forneça uma quantidade válida!");
-    }
-    
-    if (price < 0) {
-      throw new Error("O preço deve ser positivo.")
-    }
-    
-    if (quantity < 1 || !Number.isInteger(quantity)) {
-      throw new Error("A quantidade deve ser um número inteiro e positivo.")
-    }
+    const updatedPrice = price !== undefined ? price : existingPurchase.price;
+    const updatedQuantity = quantity !== undefined ? quantity : existingPurchase.quantity;
+    const totalPrice = updatedPrice * updatedQuantity;
     
     // atualiza a compra no banco
-    const purchase = await Purchase.findByIdAndUpdate(
+    const updatedPurchase = await Purchase.findByIdAndUpdate(
       id,
-      { product, quantity, price, type, store, description },
-      { new: true } // o documento atualizado é retornado
+      { 
+        product: product !== undefined ? product : existingPurchase.product,
+        quantity: updatedQuantity, 
+        price: updatedPrice, 
+        totalPrice,
+        type: type !== undefined ? type : existingPurchase.type, 
+        store: store !== undefined ? store : existingPurchase.store, 
+        description: description !== undefined ? description : existingPurchase.description 
+      },
+      { new: true, runValidators: true } // o documento atualizado é retornado
     );
 
     // se n encontrar a compra, retorna um err
-    if (!purchase) throw new Error('Compra não encontrada');
-    res.status(200).json(purchase);
+    if (!updatedPurchase) throw new Error('Compra não encontrada');
+    res.status(200).json(updatedPurchase);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -133,7 +135,7 @@ const getPurchasesByType = async (req, res) => {
       {
         $group: {
           _id: "$type", 
-          totalSpent: { $sum: "$price" }, 
+          totalSpent: { $sum: "$totalPrice" }, 
         },
       },
       { $sort: { _id: 1 } }, // ordem crescente 
@@ -194,7 +196,7 @@ const getMonthlyPurchases = async (req, res) => {
                 $group: {
                     _id: "$month",
                     totalQuantity: { $sum: "$quantity" }, // soma todos as rações compradas no mês
-                    totalSpent: { $sum: "$price" }, // soma o dinheiro gastado no mês
+                    totalSpent: { $sum: "$totalPrice" }, // soma o dinheiro gastado no mês
                     purchases: { $push: "$$ROOT" }, // coloca todas as compras do mês em um arr
                     types: { $addToSet: "$type" }
                 }

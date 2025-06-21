@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// schema da coleçõo purchases 
+// schema da coleções purchases 
 const PurchaseSchema = mongoose.Schema(
     {
         product: {
@@ -18,6 +18,10 @@ const PurchaseSchema = mongoose.Schema(
         price: {
             type: Number,
             required: [true, "Forneça o preço da ração"]
+        },
+        totalPrice: {
+            type: Number,
+            required: [true, "Forneça o preço total do produto"]
         },
         type: {
             type: String,
